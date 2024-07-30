@@ -1,6 +1,3 @@
-Jenkinsfile-01:
-
-
 pipeline {
     agent any
     environment {

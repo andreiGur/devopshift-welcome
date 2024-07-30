@@ -13,7 +13,8 @@ RUN apt-get update && \
     # Autoremove
     apt-get -qy autoremove 
 #
-RUN apt install -y iputils-ping patchelf git default-jdk plantuml doxygen graphviz xsltproc python3-pip curl vim cifs-utils nfs-common
+RUN apt-get update --fix-missing && \
+    apt-get install -y iputils-ping patchelf git default-jdk plantuml doxygen graphviz xsltproc python3-pip curl vim cifs-utils nfs-common
 
 RUN pip3 install requests==2.22.0 && \
     pip3 install Atlassian-python-API && \
@@ -22,3 +23,4 @@ RUN pip3 install requests==2.22.0 && \
 RUN mkdir -p /home/ciuser/sdk && \
     mkdir -p /home/ciuser/.jfrog && \
     mkdir -p /home/ciuser/.ssh
+

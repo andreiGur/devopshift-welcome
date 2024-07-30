@@ -1,0 +1,44 @@
+Jenkinsfile-01:
+
+
+pipeline {
+    agent any
+    environment {
+        IMAGE_NAME = 'andreigur5001/registry'
+        VERSION = "v${env.BUILD_NUMBER}"
+        REPO = 'andreigur5001/registry'
+        CREDENTIALS_ID = '64f101d3-a483-4bf1-bcf6-185951e55836'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build') {
+            steps {
+                script {
+                    docker.build("${IMAGE_NAME}:${VERSION}-build", "-f welcome/Dockerfile .")
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    docker.build("${IMAGE_NAME}:${VERSION}-test", "--target test -f welcome/Dockerfile .")
+                    sh "docker run --rm ${IMAGE_NAME}:${VERSION}-test"
+                }
+            }
+        }
+        stage('Push') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', CREDENTIALS_ID) {
+                        docker.image("${IMAGE_NAME}:${VERSION}-build").push("${VERSION}-build")
+                        docker.image("${IMAGE_NAME}:${VERSION}-test").push("${VERSION}-test")
+                    }
+                }
+            }
+        }
+    }
+}

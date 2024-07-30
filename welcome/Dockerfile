@@ -26,6 +26,12 @@ RUN mkdir -p /home/ciuser/sdk && \
     mkdir -p /home/ciuser/.jfrog && \
     mkdir -p /home/ciuser/.ssh
 
+# Lint stage
+FROM builder as lint
+# Here you can add any lint-specific setup or commands
+# For example, if you have linting tools to run, you can install and run them here
+# RUN linting_tools.sh
+
 # Test stage
 FROM builder as test
 # Here you can add any test-specific setup or commands
@@ -34,5 +40,3 @@ FROM builder as test
 
 # Default command (optional)
 CMD ["echo", "Test stage completed"]
-
-

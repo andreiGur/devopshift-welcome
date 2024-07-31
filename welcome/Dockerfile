@@ -1,4 +1,5 @@
 FROM ubuntu:20.04 as builder
+
 ################################################
 # Gurdbox setup
 ################################################
@@ -26,11 +27,8 @@ RUN mkdir -p /home/ciuser/sdk && \
     mkdir -p /home/ciuser/.jfrog && \
     mkdir -p /home/ciuser/.ssh
 
-# Lint stage
-FROM builder as lint
-# Here you can add any lint-specific setup or commands
-# For example, if you have linting tools to run, you can install and run them here
-# RUN linting_tools.sh
+# Install Snyk
+RUN curl -sL https://snyk.io/install | bash
 
 # Test stage
 FROM builder as test

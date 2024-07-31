@@ -5,6 +5,7 @@ pipeline {
         VERSION = "v${env.BUILD_NUMBER}"
         REPO = 'andreigur5001/registry'
         CREDENTIALS_ID = '64f101d3-a483-4bf1-bcf6-185951e55836'
+        SNYK_TOKEN = credentials('23754ded-ec8d-431b-89ae-91fe1311f5ff')
     }
     stages {
         stage('Checkout') {
@@ -25,6 +26,16 @@ pipeline {
                     docker.build("${IMAGE_NAME}:${VERSION}-lint", "--target lint -f welcome/Dockerfile .")
                     catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                         sh "docker run --rm ${IMAGE_NAME}:${VERSION}-lint"
+                    }
+                }
+            }
+        }
+        stage('Snyk') {
+            steps {
+                script {
+                    docker.build("${IMAGE_NAME}:${VERSION}-snyk", "--target build -f welcome/Dockerfile .")
+                    withEnv(["SNYK_TOKEN=${env.SNYK_TOKEN}"]) {
+                        sh "docker run --rm -e SNYK_TOKEN=${env.SNYK_TOKEN} ${IMAGE_NAME}:${VERSION}-snyk snyk test --docker ${IMAGE_NAME}:${VERSION}-snyk"
                     }
                 }
             }

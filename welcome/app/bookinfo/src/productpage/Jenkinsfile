@@ -5,7 +5,7 @@ pipeline {
         VERSION = "v${env.BUILD_NUMBER}"
         REPO = 'andreigur5001/registry'
         CREDENTIALS_ID = '64f101d3-a483-4bf1-bcf6-185951e55836'
-        SNYK_TOKEN = credentials('23754ded-ec8d-431b-89ae-91fe1311f5ff')
+        SNYK_TOKEN = credentials('01e4bae7-36f8-4409-8518-4985944d0152')
     }
     stages {
         stage('Checkout') {
